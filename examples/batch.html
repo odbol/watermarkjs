@@ -33,248 +33,119 @@
       </ul>
     </nav>
 
-    <div class="col-xs-12">
-      <p class="lead">
-        Sometimes you just want to write some text on top of a lot of images. The following examples demonstrate
-        using some of the text functions included with watermark.js. In the interest of saving space, the following
-        examples assume <code>watermark.text</code> has been aliased to <code>text</code>. A one second timeout is used
-        on page load to ensure font faces are loaded.
-      </p>
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="lead">
+          It would be even more handy to download a bunch of watermarked image once generated. Doing so in the client is a
+          great idea, especially if you are uncertain about image library support in a hosting environment. JavaScript is
+          decent at doing things concurrently as well, so you can even make your application snappier by letting the client
+          upload multiple images concurrently instead of a hosting environment that may or may not support such things.
+        </p>
 
-      <div class="example" id="lower-right">
-        <h2>Lower Right</h2>
-        <pre>
-          <code class="javascript">
-watermark(['/img/shepherd.jpg'])
-  .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
-  .then(function (img) {
-    document.getElementById('lower-right').appendChild(img);
-  });
-          </code>
-        </pre>
+        <p class="lead">
+          The form below allows you to generate multiple watermarked images and download them all at once.
+        </p>
       </div>
-
-      <div class="example" id="lower-left">
-        <h2>Lower Left</h2>
-        <pre>
-          <code class="javascript">
-watermark(['/img/forest.jpg'])
-  .image(text.lowerLeft('watermark.js', '48px Josefin Slab', '#fff', 0.5))
-  .then(function (img) {
-    document.getElementById('lower-left').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="upper-right">
-        <h2>Upper Right</h2>
-        <pre>
-          <code class="javascript">
-// TextMetrics objects do not support font height very well
-// so we manually provide a y value of 48 here
-var ur = text.upperRight;
-watermark(['/img/field.jpg'])
-  .image(ur('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
-  .then(function (img) {
-    document.getElementById('upper-right').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="upper-left">
-        <h2>Upper Left</h2>
-        <pre>
-          <code class="javascript">
-// TextMetrics objects do not support font height very well
-// so we manually provide a y value of 48 here
-var ul = text.upperLeft;
-watermark(['/img/wolf.jpg'])
-  .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
-  .then(function (img) {
-    document.getElementById('upper-left').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="center">
-        <h2>Center</h2>
-        <pre>
-          <code class="javascript">
-watermark(['/img/coffee.jpg'])
-  .image(text.center('watermark.js', '48px Josefin Slab', '#fff', 0.5))
-  .then(function (img) {
-    document.getElementById('center').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="arbitrary">
-        <h2>Arbitrary Positions</h2>
-        <pre>
-          <code class="javascript">
-var x = function(boat, metrics, context) {
-  return 73;
-};
-
-var y = function(boat, metrics, context) {
-  return 63;
-};
-
-pos = text.atPos;
-
-watermark(['/img/boat.jpg'])
-  .image(pos(x, y, 'watermark.js', '48px Josefin Slab', '#fff', 0.5))
-  .then(function (img) {
-    document.getElementById('arbitrary').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="rotate">
-        <h2>Rotate</h2>
-        <pre>
-          <code class="javascript">
-// At the end of the day, a draw function is just a function
-// that receives a canvas, manipulates it, then returns it.
-// You can always roll your own functionality.
-var rotate = function(target) {
-  var context = target.getContext('2d');
-  var text = 'watermark.js';
-  var metrics = context.measureText(text);
-  var x = (target.width / 2) - (metrics.width + 24);
-  var y = (target.height / 2) + 48 * 2;
-
-  context.translate(x, y);
-  context.globalAlpha = 0.5;
-  context.fillStyle = '#fff';
-  context.font = '48px Josefin Slab';
-  context.rotate(-45 * Math.PI / 180);
-  context.fillText(text, 0, 0);
-  return target;
-};
-
-watermark(['/img/bear.jpg'])
-  .image(rotate)
-  .then(function (img) {
-    document.getElementById('rotate').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
-      <div class="example" id="multiple">
-        <h2>Multiple Text Watermarks</h2>
-        <pre>
-          <code class="javascript">
-// by chaining off of render() we can write on top
-// of our image that has already been watermarked
-var ul = text.upperLeft;
-watermark(['/img/shepherd.jpg'])
-  .image(text.lowerRight('watermark.js', '48px Josefin Slab', '#fff', 0.5))
-  .render()
-  .image(ul('watermark.js', '48px Josefin Slab', '#fff', 0.5, 48))
-  .then(function (img) {
-    document.getElementById('multiple').appendChild(img);
-  });
-          </code>
-        </pre>
-      </div>
-
     </div>
 
-  </div>
-
-  
-  <div class="row">
-    <div class="col-md-4">
-      <form action="" id="uploadForm" method="POST" style="margin-top: 45px;">
-        <div class="input-group">
-          <span class="input-group-btn">
-            <span class="btn btn-primary btn-file">
-              Browse&hellip; <input type="file" id="target">
+    <div class="row">
+      <div class="col-md-4">
+        
+          <div class="input-group">
+            <span class="input-group-btn">
+              <span class="btn btn-primary btn-file">
+                Browse&hellip; <input type="file" id="target" multiple>
+              </span>
             </span>
+          </div>
+          <span class="help-block">
+            Select the images to watermark
           </span>
-          <input type="text" class="form-control" readonly>
-        </div>
-        <span class="help-block">
-          Select the image to watermark
-        </span>
-        <div class="input-group">
-          <span class="input-group-btn">
-            <span id="watermark-button" type="button" class="btn btn-primary btn-file" disabled>
-              Browse&hellip; <input type="file" id="watermark">
-            </span>
-          </span>
-          <input type="text" class="form-control" id="watermark-name" readonly>
-        </div>
-        <span class="help-block">
-          Select the watermark image
-        </span>
-        <div class="input-group">
-          <h3>Position</h3>
-          <div class="row">
-            <div class="col-xs-6">
-              <div class="radio">
-                <label><input type="radio" name="position" value="lowerRight" checked disabled>Lower Right</label>
+          <div class="input-group">
+            <h3>Position</h3>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="radio">
+                  <label><input type="radio" name="position" value="lowerRight" checked>Lower Right</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="lowerLeft">Lower Left</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="upperRight">Upper Right</label>
+                </div>
               </div>
-              <div class="radio">
-                <label><input type="radio" name="position" value="lowerLeft" disabled>Lower Left</label>
-              </div>
-              <div class="radio">
-                <label><input type="radio" name="position" value="upperRight" disabled>Upper Right</label>
-              </div>
-            </div>
-            <div class="col-xs-6">
-              <div class="radio">
-                <label><input type="radio" name="position" value="upperLeft" disabled>Upper Left</label>
-              </div>
-              <div class="radio">
-                <label><input type="radio" name="position" value="center" disabled>Center</label>
+              <div class="col-xs-6">
+                <div class="radio">
+                  <label><input type="radio" name="position" value="upperLeft">Upper Left</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="center">Center</label>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <h3>Amazon S3 Info</h3>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Access Key ID" id="accessKeyId" disabled />
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Policy" id="policy" disabled />
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Signature" id="signature" disabled />
-        </div>
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Bucket" id="bucket" disabled />
-        </div>
-
-        <button id="upload" type="submit" class="btn btn-default" disabled>Upload</button>
-
-        <div class="progress" id="progress" style="margin-top: 20px; visibility: hidden;">
-          <div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0%">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Watermark text" id="watermarkText" />
           </div>
-        </div>
-        <p id="complete" style="display: none;">
-          upload complete!
-        </p>
-        <p id="error" style="display: none;">
-          there was an error uploading
-        </p>
+          
+          <button id="upload" class="btn btn-default">Download</button>
 
-      </form>
+          <div class="progress" id="progress" style="margin-top: 20px; visibility: hidden;">
+            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0%">
+            </div>
+          </div>
+          <p id="complete" style="display: none;">
+            upload complete!
+          </p>
+          <p id="error" style="display: none;">
+            there was an error uploading
+          </p>
+
+      </div>
+      <div class="col-md-offset-1 col-md-7" id="preview">
+        <h2 class="text" style="margin-top:0">Preview</h2>
+      </div>
     </div>
-    <div class="col-md-offset-1 col-md-7" id="preview">
-      <h2 class="text" style="margin-top:0">Preview</h2>
-    </div>
-  </div>
 
   <script>
+    const watermarkText = document.getElementById('watermarkText');
+    const uploadButton = document.getElementById('upload');
+    const targetFile = document.getElementById('target');
+
+
+    uploadButton.onclick = () => {
+      const text = watermarkText.value;
+
+      if (!text) {
+        alert('Please enter watermark text first');
+        return;
+      }
+
+      for (const f of targetFile.files) {
+        console.log('processing ' + f);
+        
+        watermark([f])
+          .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
+          .then(function (img) {
+            console.log('generated ', img);
+            var pre = document.querySelector('#preview');
+            pre.appendChild(img);
+          });
+      }
+
+    };
+
+
+
+
+
+
+
+
+
+
     setTimeout(function () { //ensure font faces are loaded
       // lower right positioning
       var text = watermark.text;
