@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>watermark.js - using images</title>
+  <script src="scripts/watermark.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/highlight.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Josefin+Slab|Maven+Pro' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <link rel="stylesheet" href="css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.5/styles/default.min.css">
+</head>
+
+<body>
+  <div class="container">
+
+    <h1 class="text-center"><a href="/">watermark.js</a></h1>
+    <nav>
+      <ul>
+        <li><a href="images.html">images</a></li>
+        <li class="separator">-</li>
+        <li><a href="text.html">text</a></li>
+        <li class="separator">-</li>
+        <li><a href="batch.html">batch</a></li>
+        <li class="separator">-</li>
+        <li><a href="batch.html">batch</a></li>
+        <li class="separator">-</li>
+        <li><a href="uploading.html">uploading</a></li>
+        <li class="separator">-</li>
+        <li><a href="pooling.html">pooling</a></li>
+        <li class="separator">-</li>
+        <li><a href="docs.html">documentation</a></li>
+      </ul>
+    </nav>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <p class="lead">
+          It would be even more handy to download a bunch of watermarked image once generated. 
+          The form below allows you to generate multiple watermarked images and download them all at once.
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4">
+        
+          <div class="input-group">
+            <span class="input-group-btn">
+              <span class="btn btn-primary btn-file">
+                Browse&hellip; <input type="file" id="target" multiple>
+              </span>
+            </span>
+          </div>
+          <span class="help-block">
+            Select the images to watermark (hold shift or ctrl when selecting files to select multiple)
+          </span>
+          <div class="input-group">
+            <h3>Position</h3>
+            <div class="row">
+              <div class="col-xs-6">
+                <div class="radio">
+                  <label><input type="radio" name="position" value="lowerRight" checked>Lower Right</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="lowerLeft">Lower Left</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="upperRight">Upper Right</label>
+                </div>
+              </div>
+              <div class="col-xs-6">
+                <div class="radio">
+                  <label><input type="radio" name="position" value="upperLeft">Upper Left</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="position" value="center">Center</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label><h3>JPEG Compression ratio</h3>
+            <input type="text" class="form-control" placeholder="Value from 0-1" id="compressionText" value="0.8" />
+            </label>
+          </div>
+
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="Watermark text" id="watermarkText" value="&copy; " />
+          </div>
+          
+          <button id="upload" class="btn btn-default">Download</button>
+
+          <div class="progress" id="progress" style="margin-top: 20px; visibility: hidden;">
+            <div class="progress-bar progress-bar-success progress-bar-striped" style="width: 0%">
+            </div>
+          </div>
+          <p id="complete" style="display: none;">
+            upload complete!
+          </p>
+          <p id="error" style="display: none;">
+            there was an error uploading
+          </p>
+
+      </div>
+      <div class="col-md-offset-1 col-md-7" id="preview">
+        <h2 class="text" style="margin-top:0">Preview</h2>
+      </div>
+    </div>
+
+  <script>
+    const watermarkText = document.getElementById('watermarkText');
+    const compressionText = document.getElementById('compressionText');
+    const uploadButton = document.getElementById('upload');
+    const targetFile = document.getElementById('target');
+
+
+    uploadButton.onclick = () => {
+      const text = watermarkText.value;
+      const compression = Number(compressionText.value);
+
+      if (!text) {
+        alert('Please enter watermark text first');
+        return;
+      }
+
+      Array.from(targetFile.files).forEach(f => {
+        console.log('processing ' + f);
+        
+        watermark([f], {type: 'image/jpeg', encoderOptions: compression})
+          .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
+          .render()
+          .image(canvas => {
+            const isVertical = canvas.height > canvas.width;
+            const width = isVertical ? 600 : 800;
+            const height = canvas.height / canvas.width * width;
+            const resizeCanvas = document.createElement('canvas');
+            resizeCanvas.width = width;
+            resizeCanvas.height = height;
+            const context = resizeCanvas.getContext('2d');
+
+            context.drawImage(canvas, 0, 0, width, height);
+
+            return resizeCanvas;
+          })
+          .then(function (img) {
+            console.log('generated ', img);
+            var pre = document.querySelector('#preview');
+            pre.appendChild(img);
+
+            const filenameParts = f.name.split('.');
+            filenameParts.splice(1, 0, ['watermarked']);
+
+            downloadFile(img.src, filenameParts.join('.'));
+          });
+      });
+
+    };
+
+
+    // from https://www.stefanjudis.com/snippets/how-trigger-file-downloads-with-javascript/
+    function downloadFile(url, filename) {
+      // Create a link and set the URL using `createObjectURL`
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;//URL.createObjectURL(url);
+      link.download = filename;
+
+      // It needs to be added to the DOM so it can be clicked
+      document.body.appendChild(link);
+      link.click();
+
+      // To make this work on Firefox we need to wait
+      // a little while before removing it.
+      setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        link.parentNode.removeChild(link);
+      }, 0);
+    }
+  </script>
+
+  <script>hljs.initHighlightingOnLoad();</script>
+</body>
+
+</html>
