@@ -123,7 +123,7 @@
         return;
       }
 
-      for (const f of targetFile.files) {
+      Array.from(targetFile.files).forEach(f => {
         console.log('processing ' + f);
         
         watermark([f])
@@ -146,11 +146,36 @@
             console.log('generated ', img);
             var pre = document.querySelector('#preview');
             pre.appendChild(img);
+
+            const filenameParts = f.name.split('.');
+            filenameParts.splice(1, 0, ['watermarked']);
+
+            downloadFile(img.src, filenameParts.join('.'));
           });
-      }
+      });
 
     };
 
+
+    // from https://www.stefanjudis.com/snippets/how-trigger-file-downloads-with-javascript/
+    function downloadFile(url, filename) {
+      // Create a link and set the URL using `createObjectURL`
+      const link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;//URL.createObjectURL(url);
+      link.download = filename;
+
+      // It needs to be added to the DOM so it can be clicked
+      document.body.appendChild(link);
+      link.click();
+
+      // To make this work on Firefox we need to wait
+      // a little while before removing it.
+      setTimeout(() => {
+        URL.revokeObjectURL(link.href);
+        link.parentNode.removeChild(link);
+      }, 0);
+    }
   </script>
 
   <script>hljs.initHighlightingOnLoad();</script>
