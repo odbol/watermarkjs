@@ -25,8 +25,6 @@
         <li class="separator">-</li>
         <li><a href="batch.html">batch</a></li>
         <li class="separator">-</li>
-        <li><a href="batch.html">batch</a></li>
-        <li class="separator">-</li>
         <li><a href="uploading.html">uploading</a></li>
         <li class="separator">-</li>
         <li><a href="pooling.html">pooling</a></li>
@@ -131,8 +129,6 @@
         console.log('processing ' + f);
         
         watermark([f], {type: 'image/jpeg', encoderOptions: compression})
-          .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
-          .render()
           .image(canvas => {
             const isVertical = canvas.height > canvas.width;
             const width = isVertical ? 600 : 800;
@@ -146,6 +142,8 @@
 
             return resizeCanvas;
           })
+          .render()
+          .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
           .then(function (img) {
             console.log('generated ', img);
             var pre = document.querySelector('#preview');
