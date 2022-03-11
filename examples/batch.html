@@ -87,7 +87,7 @@
           </div>
 
           <div class="form-group">
-            <input type="text" class="form-control" placeholder="Watermark text" id="watermarkText" />
+            <input type="text" class="form-control" placeholder="Watermark text" id="watermarkText" value="&copy;" />
           </div>
           
           <button id="upload" class="btn btn-default">Download</button>
@@ -128,6 +128,20 @@
         
         watermark([f])
           .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
+          .render()
+          .image(canvas => {
+            const isVertical = canvas.height > canvas.width;
+            const width = isVertical ? 600 : 800;
+            const height = canvas.height / canvas.width * width;
+            const resizeCanvas = document.createElement('canvas');
+            resizeCanvas.width = width;
+            resizeCanvas.height = height;
+            const context = resizeCanvas.getContext('2d');
+
+            context.drawImage(canvas, 0, 0, width, height);
+
+            return resizeCanvas;
+          })
           .then(function (img) {
             console.log('generated ', img);
             var pre = document.querySelector('#preview');
