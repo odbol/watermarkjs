@@ -87,6 +87,12 @@
           </div>
 
           <div class="form-group">
+            <label><h3>JPEG Compression ratio</h3>
+            <input type="text" class="form-control" placeholder="Value from 0-1" id="compressionText" value="0.8" />
+            </label>
+          </div>
+
+          <div class="form-group">
             <input type="text" class="form-control" placeholder="Watermark text" id="watermarkText" value="&copy;" />
           </div>
           
@@ -111,12 +117,14 @@
 
   <script>
     const watermarkText = document.getElementById('watermarkText');
+    const compressionText = document.getElementById('compressionText');
     const uploadButton = document.getElementById('upload');
     const targetFile = document.getElementById('target');
 
 
     uploadButton.onclick = () => {
       const text = watermarkText.value;
+      const compression = Number(compressionText.value);
 
       if (!text) {
         alert('Please enter watermark text first');
@@ -126,7 +134,7 @@
       Array.from(targetFile.files).forEach(f => {
         console.log('processing ' + f);
         
-        watermark([f])
+        watermark([f], {type: 'image/jpeg', encoderOptions: compression})
           .image(watermark.text.lowerRight(text, '48px Josefin Slab', '#fff', 0.5))
           .render()
           .image(canvas => {
